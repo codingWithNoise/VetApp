@@ -5,7 +5,10 @@ import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.NoResultException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Service
 public class AppointmentService {
@@ -22,7 +25,7 @@ public class AppointmentService {
     }
 
     public String createAppointment(Appointment appointment) {
-        if(isTimeAvail(appointment)){
+        if(isTimeCorrect(appointment) && isTimeAvail(appointment)){
             Integer id = repository.createAppointment(appointment);
             return "The appointment is scheduled. ID of the appointment: " + id;
         } else {
@@ -37,6 +40,10 @@ public class AppointmentService {
             return "No appointment to delete.";
         }
         return "Deleted";
+    }
+
+    protected boolean isTimeCorrect(Appointment appointment) {
+        return appointment.getDate().after(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
     }
 
     protected boolean isTimeAvail(Appointment appointment) {

@@ -23,6 +23,6 @@ public class ClientRepository {
         } catch (NoResultException e) {
             return false;
         }
-        return Integer.compare(client.getClientPIN(), clientPIN.intValue()) == 0;
+        return Integer.compare(client.getClientPIN(), clientPIN) == 0;
     }
 }

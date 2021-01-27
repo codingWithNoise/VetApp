@@ -52,4 +52,12 @@ public class AppointmentControllerTest {
             fail();
         }
     }
+
+    @Test
+    void deleteAppointmentTest() {
+        String expected = "Deleted";
+        when(appointmentService.deleteAppointment(clientId, 1)).thenReturn(expected);
+        String actual = controller.deleteAppointment(clientId, clientPIN, 1);
+        assertEquals(actual, expected);
+    }
 }

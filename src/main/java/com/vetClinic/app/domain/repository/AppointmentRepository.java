@@ -3,10 +3,12 @@ import com.vetClinic.app.domain.Appointment;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class AppointmentRepository {
@@ -36,12 +38,15 @@ public class AppointmentRepository {
     }
 
     public boolean isTimeAvail(String doctorId, Date date){
-        try {
-            em.createQuery("from Appointment a where a.doctorId=:doctorId and a.date=:date", Appointment.class)
-                    .setParameter("doctorId", doctorId).setParameter("date", date).getSingleResult();
-        } catch (NoResultException e) {
-            return true;
-        }
-        return false;
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MINUTE, -30);
+        Date dateIntervalStart = c.getTime();
+        c.add(Calendar.MINUTE, 60);
+        Date dateIntervalEnd = c.getTime();
+
+        List<Appointment> list = em.createQuery("from Appointment a where a.doctorId=:doctorId and a.date>:dateStart and a.date<:dateEnd", Appointment.class)
+                    .setParameter("doctorId", doctorId).setParameter("dateStart", dateIntervalStart).setParameter("dateEnd", dateIntervalEnd).getResultList();
+        return list.size() == 0;
     }
 }
