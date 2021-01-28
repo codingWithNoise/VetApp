@@ -9,13 +9,10 @@ import static org.mockito.Mockito.when;
 
 class ClientServiceTests {
 
-    private ClientRepository repository;
-    private ClientService service;
-
     @Test
     void clientPINCheckTest() {
-        repository = mock(ClientRepository.class);
-        service = new ClientService(repository);
+        ClientRepository repository = mock(ClientRepository.class);
+        ClientService service = new ClientService(repository);
         when(repository.clientPINCheck(1111, 2222)).thenReturn(true);
         assertTrue(service.clientPINcheck(1111, 2222));
     }

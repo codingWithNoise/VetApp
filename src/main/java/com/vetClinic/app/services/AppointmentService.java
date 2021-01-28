@@ -1,11 +1,11 @@
 package com.vetClinic.app.services;
 
+import com.vetClinic.app.UserMessageKey;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.NoResultException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -25,11 +25,11 @@ public class AppointmentService {
     }
 
     public String createAppointment(Appointment appointment) {
-        if(isTimeCorrect(appointment) && isTimeAvail(appointment)){
+        if(isTimeCorrect(appointment) && repository.isTimeAvail(appointment.getDoctorId(), appointment.getDate())){
             Integer id = repository.createAppointment(appointment);
-            return "The appointment is scheduled. ID of the appointment: " + id;
+            return UserMessageKey.APPOINTMENT_NEW_DONE.getMessage() + id;
         } else {
-            return "Chosen time is not available.";
+            return UserMessageKey.APPOITNMENT_FAILED.getMessage();
         }
     }
 
@@ -37,16 +37,12 @@ public class AppointmentService {
         try {
             repository.deleteAppointment(clientId, id);
         } catch (NoResultException e) {
-            return "No appointment to delete.";
+            return UserMessageKey.CANCELLATION_FAILED.getMessage();
         }
-        return "Deleted";
+        return UserMessageKey.CANCELLATION_DONE.getMessage();
     }
 
     protected boolean isTimeCorrect(Appointment appointment) {
         return appointment.getDate().after(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
-    }
-
-    protected boolean isTimeAvail(Appointment appointment) {
-        return repository.isTimeAvail(appointment.getDoctorId(), appointment.getDate());
     }
 }

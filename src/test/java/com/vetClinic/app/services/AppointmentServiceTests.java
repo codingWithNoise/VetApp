@@ -1,5 +1,6 @@
 package com.vetClinic.app.services;
 
+import com.vetClinic.app.UserMessageKey;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,14 +22,13 @@ class AppointmentServiceTests {
     private Appointment appointment2 = new Appointment();
     private Date date;
     private String doctorId = "greym";
-    private Calendar c;
 
     @BeforeEach
     void setUp() {
         repository = mock(AppointmentRepository.class);
         service = new AppointmentService(repository);
         appointment1.setDoctorId(doctorId);
-        c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         c.add(Calendar.MINUTE, 5);
         date = c.getTime();
         appointment1.setDate(date);
@@ -45,21 +45,16 @@ class AppointmentServiceTests {
     @Test
     void createAppointmentTest() {
         when(repository.createAppointment(appointment1)).thenReturn(1);
-        String expected = "The appointment is scheduled. ID of the appointment: 1";
+        String expected = UserMessageKey.APPOINTMENT_NEW_DONE.getMessage() + "1";
         String actual = service.createAppointment(appointment1);
         assertEquals(expected, actual);
     }
 
     @Test
     void deleteAppointmentTest() {
-        String expected = "Deleted";
+        String expected = UserMessageKey.CANCELLATION_DONE.getMessage();
         String actual = service.deleteAppointment(1111, 1);
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void isTimeAvailTest() {
-        assertTrue(service.isTimeAvail(appointment1));
     }
 
     @Test

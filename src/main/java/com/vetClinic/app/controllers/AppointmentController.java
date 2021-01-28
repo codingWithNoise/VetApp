@@ -1,5 +1,6 @@
 package com.vetClinic.app.controllers;
 
+import com.vetClinic.app.UserMessageKey;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.services.AppointmentService;
 import com.vetClinic.app.services.ClientService;
@@ -31,13 +32,13 @@ public class AppointmentController {
             appointment.setClientId(clientId);
             return service.createAppointment(appointment);
         } else {
-            System.out.println("Given clientId and/or password are incorrect.");
+            System.out.println(UserMessageKey.AUTHORISATION_FAILED.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @GetMapping(path="/appointments/{doctorID}/{date}")
-    public @ResponseBody Iterable<Appointment> getAllAppointments(@PathVariable String doctorID, @PathVariable String date) throws ParseException {
+    @GetMapping(path="/appointments/{doctorID}")
+    public @ResponseBody Iterable<Appointment> getAllAppointments(@PathVariable String doctorID, @RequestParam String date) throws ParseException {
         return service.getAllAppointments(doctorID, DATE_FORMAT.parse(date));
     }
 
@@ -46,7 +47,7 @@ public class AppointmentController {
         if(clientService.clientPINcheck(clientId, clientPIN)) {
             return service.deleteAppointment(clientId, id);
         } else {
-            System.out.println("Given clientId and/or password are incorrect.");
+            System.out.println(UserMessageKey.AUTHORISATION_FAILED.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
