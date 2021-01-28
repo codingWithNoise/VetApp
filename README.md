@@ -34,7 +34,7 @@ curl -X DELETE localhost:8080/appointments/2 \
 * cancellation of appointment:
   * request requires providing an id of the appointment in the path
 ```bash
-curl localhost:8080/appointments/greym/2021-02-01
+curl localhost:8080/appointments/greym?date=2021-02-01
 ```
 * listing appointments:
   * request requires providing doctors id and date in the format "yyyy-MM-dd" in the path.
