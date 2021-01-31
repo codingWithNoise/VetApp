@@ -8,14 +8,14 @@ public class Client {
 
     @Id
     private Integer clientId;
-    private Integer clientPIN;
+    private String clientPIN;
     private String name;
     private String surname;
 
     public Client() {
     }
 
-    public Integer getClientPIN() {
+    public String getClientPIN() {
         return clientPIN;
     }
 }

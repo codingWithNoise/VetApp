@@ -13,7 +13,7 @@ public class Appointment {
     private Integer clientId;
     private String doctorId;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date time;
 
     public Appointment() {
     }
@@ -26,8 +26,8 @@ public class Appointment {
         return doctorId;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getTime() {
+        return time;
     }
 
     public Integer getId() {
@@ -46,7 +46,7 @@ public class Appointment {
         this.doctorId = doctorId;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

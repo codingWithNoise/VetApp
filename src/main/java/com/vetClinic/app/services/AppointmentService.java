@@ -1,6 +1,7 @@
 package com.vetClinic.app.services;
 
-import com.vetClinic.app.UserMessageKey;
+import com.vetClinic.app.AppointmentServiceException;
+import com.vetClinic.app.ErrorMessage;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.TimeZone;
 @Service
 public class AppointmentService {
 
-    private AppointmentRepository repository;
+    private final AppointmentRepository repository;
 
     @Autowired
     public AppointmentService(AppointmentRepository repository) {
@@ -24,25 +25,34 @@ public class AppointmentService {
         return repository.getAllAppointments(doctorId, date);
     }
 
-    public String createAppointment(Appointment appointment) {
-        if(isTimeCorrect(appointment) && repository.isTimeAvail(appointment.getDoctorId(), appointment.getDate())){
-            Integer id = repository.createAppointment(appointment);
-            return UserMessageKey.APPOINTMENT_NEW_DONE.getMessage() + id;
+    public Integer createAppointment(Appointment appointment) throws AppointmentServiceException{
+        if(isTimeInFuture(appointment) && isTimeAvail(appointment.getDoctorId(), appointment.getTime())){
+            return repository.createAppointment(appointment);
         } else {
-            return UserMessageKey.APPOITNMENT_FAILED.getMessage();
+            throw new AppointmentServiceException(ErrorMessage.APPOINTMENT_ERROR);
         }
     }
 
-    public String deleteAppointment(Integer clientId, Integer id) {
+    public void deleteAppointment(Integer clientId, Integer id) throws AppointmentServiceException {
         try {
             repository.deleteAppointment(clientId, id);
         } catch (NoResultException e) {
-            return UserMessageKey.CANCELLATION_FAILED.getMessage();
+            throw new AppointmentServiceException(ErrorMessage.CANCELLATION_ERROR);
         }
-        return UserMessageKey.CANCELLATION_DONE.getMessage();
     }
 
-    protected boolean isTimeCorrect(Appointment appointment) {
-        return appointment.getDate().after(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
+    private boolean isTimeInFuture(Appointment appointment) {
+        return appointment.getTime().after(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
+    }
+
+    private boolean isTimeAvail(String doctorId, Date time) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(time);
+        c.add(Calendar.MINUTE, -30);
+        Date startTime = c.getTime();
+        c.add(Calendar.MINUTE, 60);
+        Date endTime = c.getTime();
+
+        return repository.getAppointmentsStartingBetween(doctorId, startTime, endTime).isEmpty();
     }
 }

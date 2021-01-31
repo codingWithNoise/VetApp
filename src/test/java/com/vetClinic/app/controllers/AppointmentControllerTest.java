@@ -1,6 +1,8 @@
 package com.vetClinic.app.controllers;
 
-import com.vetClinic.app.UserMessageKey;
+import com.vetClinic.app.AppointmentServiceException;
+import com.vetClinic.app.ClientServiceException;
+import com.vetClinic.app.ErrorMessage;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.services.AppointmentService;
 import com.vetClinic.app.services.ClientService;
@@ -19,24 +21,22 @@ public class AppointmentControllerTest {
     private AppointmentService appointmentService;
     private AppointmentController controller;
     private Integer clientId = 1111;
-    private Integer clientPIN = 2222;
+    private String clientPIN = "2222";
     private Appointment appointment1 = new Appointment();
     private Appointment appointment2 = new Appointment();
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ClientServiceException {
         appointmentService = mock(AppointmentService.class);
         ClientService clientService = mock(ClientService.class);
         controller = new AppointmentController(appointmentService, clientService);
-        when(clientService.clientPINcheck(clientId, clientPIN)).thenReturn(true);
+        when(clientService.isPINCorrect(clientId, clientPIN)).thenReturn(true);
     }
 
     @Test
-    void newAppointmentTest() {
-        String expected = UserMessageKey.APPOINTMENT_NEW_DONE.getMessage();
-        when(appointmentService.createAppointment(appointment1)).thenReturn(expected);
-        String actual = controller.newAppointment(clientId, clientPIN, appointment1);
-        assertEquals(actual, expected);
+    void newAppointmentTest() throws AppointmentServiceException {
+        when(appointmentService.createAppointment(appointment1)).thenReturn(1);
+        assertEquals(controller.newAppointment(clientId, clientPIN, appointment1), 1);
         assertEquals(clientId, appointment1.getClientId());
     }
 
@@ -46,18 +46,6 @@ public class AppointmentControllerTest {
         Iterable<Appointment> list = Arrays.asList(appointment1, appointment2);
         String doctorId = "yangc";
         when(appointmentService.getAllAppointments(doctorId, DATE_FORMAT.parse("2019-09-13"))).thenReturn(list);
-        try {
-            assertEquals(controller.getAllAppointments(doctorId, "2019-09-13"), list);
-        } catch (ParseException e) {
-            fail();
-        }
-    }
-
-    @Test
-    void deleteAppointmentTest() {
-        String expected = UserMessageKey.CANCELLATION_DONE.getMessage();
-        when(appointmentService.deleteAppointment(clientId, 1)).thenReturn(expected);
-        String actual = controller.deleteAppointment(clientId, clientPIN, 1);
-        assertEquals(actual, expected);
+        assertEquals(controller.getAllAppointments(doctorId, "2019-09-13"), list);
     }
 }

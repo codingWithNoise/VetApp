@@ -1,17 +1,15 @@
 package com.vetClinic.app.services;
 
-import com.vetClinic.app.UserMessageKey;
+import com.vetClinic.app.AppointmentServiceException;
+import com.vetClinic.app.ErrorMessage;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+
+import java.util.*;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AppointmentServiceTests {
@@ -31,8 +29,12 @@ class AppointmentServiceTests {
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         c.add(Calendar.MINUTE, 5);
         date = c.getTime();
-        appointment1.setDate(date);
-        when(repository.isTimeAvail(doctorId, date)).thenReturn(true);
+        c.add(Calendar.MINUTE, -30);
+        Date startTime = c.getTime();
+        c.add(Calendar.MINUTE, 30);
+        Date endTime = c.getTime();
+        appointment1.setTime(date);
+        when(repository.getAppointmentsStartingBetween(doctorId, startTime, endTime)).thenReturn(Collections.emptyList());
     }
 
     @Test
@@ -43,22 +45,8 @@ class AppointmentServiceTests {
     }
 
     @Test
-    void createAppointmentTest() {
+    void createAppointmentTest() throws AppointmentServiceException {
         when(repository.createAppointment(appointment1)).thenReturn(1);
-        String expected = UserMessageKey.APPOINTMENT_NEW_DONE.getMessage() + "1";
-        String actual = service.createAppointment(appointment1);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void deleteAppointmentTest() {
-        String expected = UserMessageKey.CANCELLATION_DONE.getMessage();
-        String actual = service.deleteAppointment(1111, 1);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void isTimeCorrectTest() {
-        assertTrue(service.isTimeCorrect(appointment1));
+        assertEquals(1, service.createAppointment(appointment1));
     }
 }

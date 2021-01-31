@@ -15,14 +15,9 @@ public class ClientRepository {
     public ClientRepository() {
     }
 
-    public boolean clientPINCheck(Integer clientId, Integer clientPIN) {
-        Client client;
-        try {
-            client = em.createQuery("from Client c where c.clientId=:clientId", Client.class).
-                    setParameter("clientId", clientId).getSingleResult();
-        } catch (NoResultException e) {
-            return false;
-        }
-        return Integer.compare(client.getClientPIN(), clientPIN) == 0;
+    public String getPINForClient(Integer clientId) throws NoResultException{
+        Client client = em.createQuery("from Client c where c.clientId=:clientId", Client.class).
+                setParameter("clientId", clientId).getSingleResult();
+        return client.getClientPIN();
     }
 }
