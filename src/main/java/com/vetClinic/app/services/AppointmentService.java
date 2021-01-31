@@ -6,6 +6,7 @@ import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.NoResultException;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +18,7 @@ public class AppointmentService {
     private final AppointmentRepository repository;
 
     @Autowired
-    public AppointmentService(AppointmentRepository repository) {
+    AppointmentService(AppointmentRepository repository) {
         this.repository = repository;
     }
 
@@ -25,8 +26,8 @@ public class AppointmentService {
         return repository.getAllAppointments(doctorId, date);
     }
 
-    public Integer createAppointment(Appointment appointment) throws AppointmentServiceException{
-        if(isTimeInFuture(appointment) && isTimeAvail(appointment.getDoctorId(), appointment.getTime())){
+    public Integer createAppointment(Appointment appointment) throws AppointmentServiceException {
+        if (isTimeInFuture(appointment) && isTimeAvail(appointment.getDoctorId(), appointment.getTime())) {
             return repository.createAppointment(appointment);
         } else {
             throw new AppointmentServiceException(ErrorMessage.APPOINTMENT_ERROR);

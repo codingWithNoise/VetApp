@@ -14,7 +14,7 @@ public class ClientService {
     private final ClientRepository repository;
 
     @Autowired
-    public ClientService(ClientRepository repository) {
+    ClientService(ClientRepository repository) {
         this.repository = repository;
     }
 

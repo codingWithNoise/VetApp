@@ -3,6 +3,7 @@ package com.vetClinic.app.services;
 import com.vetClinic.app.ClientServiceException;
 import com.vetClinic.app.domain.repository.ClientRepository;
 import org.junit.jupiter.api.Test;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

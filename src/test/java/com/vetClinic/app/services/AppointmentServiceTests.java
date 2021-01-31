@@ -1,7 +1,6 @@
 package com.vetClinic.app.services;
 
 import com.vetClinic.app.AppointmentServiceException;
-import com.vetClinic.app.ErrorMessage;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.domain.repository.AppointmentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AppointmentServiceTests {
 

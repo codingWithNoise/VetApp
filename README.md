@@ -12,7 +12,7 @@ Steps:
 * creating the database;
 * creating the user;
 * granting privileges;
-* inserting tables and data;  
+* creating tables and inserting data;  
 
 For mySQL 8.0:  
 
@@ -34,7 +34,7 @@ After running the application there are three requests than can be proceeded.
 Examples of usage using curl:  
 * adding new appointment:
   * possible clientIds and PIN numbers can be checked in the client table in the database;
-  * time of the appointment needs to be a date in the future, that is available at chosen doctors schedule;
+  * time of the appointment needs to be a time in the future, that is available at chosen doctors schedule;
   * appointment lasts 30 minutes;
   * application returns an id of newly created appointment;  
 ```bash
@@ -52,7 +52,7 @@ curl -X DELETE localhost:8080/appointments/2 \
 -H "clientPIN: 4111"
 ```  
 * listing appointments:
-  * request requires providing doctors id in the path and date in the format "yyyy-MM-dd" as parameter;  
+  * request requires providing doctors id in the path and date in the format "yyyy-MM-dd" as quote parameter;  
 ```bash
 curl 'localhost:8080/appointments/greym?date=2021-02-01'
 ```  

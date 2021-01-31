@@ -1,6 +1,8 @@
 package com.vetClinic.app.domain.repository;
+
 import com.vetClinic.app.domain.Appointment;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -35,7 +37,7 @@ public class AppointmentRepository {
                 setParameter("doctorId", doctorId).setParameter("date", date).getResultList();
     }
 
-    public List<Appointment> getAppointmentsStartingBetween(String doctorId, Date startTime, Date endTime){
+    public List<Appointment> getAppointmentsStartingBetween(String doctorId, Date startTime, Date endTime) {
         return em.createQuery("from Appointment a where a.doctorId=:doctorId and a.time>:startTime and a.time<:endTime", Appointment.class)
                 .setParameter("doctorId", doctorId).setParameter("startTime", startTime).setParameter("endTime", endTime).getResultList();
     }

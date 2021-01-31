@@ -2,21 +2,21 @@ package com.vetClinic.app.controllers;
 
 import com.vetClinic.app.AppointmentServiceException;
 import com.vetClinic.app.ClientServiceException;
-import com.vetClinic.app.ErrorMessage;
 import com.vetClinic.app.domain.Appointment;
 import com.vetClinic.app.services.AppointmentService;
 import com.vetClinic.app.services.ClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AppointmentControllerTest {
+class AppointmentControllerTest {
 
     private AppointmentService appointmentService;
     private AppointmentController controller;

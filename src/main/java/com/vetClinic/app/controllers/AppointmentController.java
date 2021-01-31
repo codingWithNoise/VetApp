@@ -28,11 +28,12 @@ public class AppointmentController {
         this.clientService = clientService;
     }
 
-    @PostMapping(path="/appointments/new")
-    public @ResponseBody Integer newAppointment(@RequestHeader Integer clientId, @RequestHeader String clientPIN, @RequestBody Appointment appointment) {
+    @PostMapping(path = "/appointments/new")
+    public @ResponseBody
+    Integer newAppointment(@RequestHeader Integer clientId, @RequestHeader String clientPIN, @RequestBody Appointment appointment) {
         appointment.setClientId(clientId);
         try {
-            if(clientService.isPINCorrect(clientId, clientPIN)) {
+            if (clientService.isPINCorrect(clientId, clientPIN)) {
                 return service.createAppointment(appointment);
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ErrorMessage.AUTHORIZATION_ERROR.getMessage());
@@ -40,19 +41,21 @@ public class AppointmentController {
         } catch (ClientServiceException ce) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ce.getMessage());
         } catch (AppointmentServiceException ae) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ae.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ae.getMessage());
         }
     }
 
-    @GetMapping(path="/appointments/{doctorID}")
-    public @ResponseBody Iterable<Appointment> getAllAppointments(@PathVariable String doctorID, @RequestParam String date) throws ParseException {
+    @GetMapping(path = "/appointments/{doctorID}")
+    public @ResponseBody
+    Iterable<Appointment> getAllAppointments(@PathVariable String doctorID, @RequestParam String date) throws ParseException {
         return service.getAllAppointments(doctorID, DATE_FORMAT.parse(date));
     }
 
-    @DeleteMapping(path="/appointments/{id}")
-    public @ResponseBody void deleteAppointment(@RequestHeader Integer clientId, @RequestHeader String clientPIN, @PathVariable Integer id) {
+    @DeleteMapping(path = "/appointments/{id}")
+    public @ResponseBody
+    void deleteAppointment(@RequestHeader Integer clientId, @RequestHeader String clientPIN, @PathVariable Integer id) {
         try {
-            if(clientService.isPINCorrect(clientId, clientPIN)) {
+            if (clientService.isPINCorrect(clientId, clientPIN)) {
                 service.deleteAppointment(clientId, id);
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ErrorMessage.AUTHORIZATION_ERROR.getMessage());
@@ -60,7 +63,7 @@ public class AppointmentController {
         } catch (ClientServiceException ce) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ce.getMessage());
         } catch (AppointmentServiceException ae) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ae.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ae.getMessage());
         }
     }
 }
