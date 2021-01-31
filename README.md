@@ -52,7 +52,7 @@ curl -X DELETE localhost:8080/appointments/2 \
 -H "clientPIN: 4111"
 ```  
 * listing appointments:
-  * request requires providing doctors id in the path and date in the format "yyyy-MM-dd" as quote parameter;  
+  * request requires providing doctors id in the path and date in the format "yyyy-MM-dd" as query parameter;  
 ```bash
 curl 'localhost:8080/appointments/greym?date=2021-02-01'
 ```  
